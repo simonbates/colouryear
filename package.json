@@ -1,0 +1,12 @@
+{
+    "name": "colouryear",
+    "private": true,
+    "scripts": {
+        "test": "tape -r esm tests/ColouryearTests.js"
+    },
+    "devDependencies": {
+        "@11ty/eleventy": "^0.10.0",
+        "esm": "^3.2.25",
+        "tape": "^4.13.0"
+    }
+}

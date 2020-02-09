@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Colour Year Hex Clock</title>
+        <meta name="description" content="A clock that displays the progress of the year in hex colour codes, starting at #000000 at midnight December 31 UTC and counting up to #FFFFFF at the end of the year.">
+        <link href="https://fonts.googleapis.com/css?family=Space+Mono:400,700&display=swap" rel="stylesheet">
+        <link href="/site.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="header">
+            the year in 16777216 hex colour codes<span style="padding: 0 0.5em">&#124;</span><a class="header__link" href="https://github.com/simonbates/colouryear">GitHub</a>
+        </div>
+        <div id="display" class="display"></div>
+        <script type="module">
+            import * as colouryear from "/Colouryear.js";
+
+            const numColours = Math.pow(2, 24);
+            const displayElem = document.getElementById("display");
+
+            function updateColour(colourNum) {
+                const luminance = colouryear.luminance(colourNum);
+                let textColour;
+                if (luminance > 0.179) {
+                    textColour = "#000000";
+                } else {
+                    textColour = "#FFFFFF";
+                }
+                const colourHex = '#' + colourNum.toString(16).toUpperCase().padStart(6, '0');
+                document.body.setAttribute("style",
+                    `background: ${colourHex}; color: ${textColour};`);
+                displayElem.innerText = colourHex;
+            }
+
+            let colourNumLastFrame = colouryear.calculateColourNumNow(numColours);
+            updateColour(colourNumLastFrame);
+
+            function step() {
+                const colourNum = colouryear.calculateColourNumNow(numColours);
+                if (colourNum !== colourNumLastFrame) {
+                    updateColour(colourNum);
+                    colourNumLastFrame = colourNum;
+                }
+                requestAnimationFrame(step);
+            }
+
+            requestAnimationFrame(step);
+        </script>
+    </body>
+</html>
